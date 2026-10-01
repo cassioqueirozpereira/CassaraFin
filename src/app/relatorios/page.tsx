@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { PeriodSelector } from '@/components/common/PeriodSelector';
 import { CashFlowReport } from '@/components/relatorios/CashFlowReport';
 import { IncomeExpenseReport } from '@/components/relatorios/IncomeExpenseReport';
@@ -9,6 +10,9 @@ import { getStartOfMonthString, getEndOfMonthString } from '@/utils/formatters';
 import { BarChart3, Activity, PieChart, Printer, Target } from 'lucide-react';
 
 export default function RelatoriosPage() {
+  const { role } = useAuth();
+  const isComum = role === 'comum';
+
   const [activeTab, setActiveTab] = useState<'fluxo' | 'entradas_saidas' | 'centro_custo'>('fluxo');
   const [startDate, setStartDate] = useState(getStartOfMonthString());
   const [endDate, setEndDate] = useState(getEndOfMonthString());
@@ -17,6 +21,8 @@ export default function RelatoriosPage() {
   const handlePrint = () => {
     window.print();
   };
+
+  const currentTab = isComum ? 'fluxo' : activeTab;
 
   return (
     <div className="space-y-6">
@@ -31,50 +37,52 @@ export default function RelatoriosPage() {
               5. Módulo — Relatórios Financeiros
             </h2>
             <p className="text-xs text-slate-400 print:text-slate-600 mt-0.5">
-              Análise de Fluxo de Caixa, Entradas e Saídas e verificação de Gastos por Centro de Custo
+              {isComum ? 'Visualização de Fluxo de Caixa' : 'Análise de Fluxo de Caixa, Entradas e Saídas e verificação de Gastos por Centro de Custo'}
             </p>
           </div>
         </div>
 
         {/* Tab Switcher & Print Button */}
         <div className="flex flex-wrap items-center gap-3 print:hidden">
-          <div className="bg-slate-950 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1">
-            <button
-              onClick={() => setActiveTab('fluxo')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'fluxo'
-                  ? 'bg-sky-600 text-white shadow-md shadow-sky-600/25'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Activity className="w-3.5 h-3.5" />
-              <span>Fluxo de Caixa</span>
-            </button>
+          {!isComum && (
+            <div className="bg-slate-950 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1">
+              <button
+                onClick={() => setActiveTab('fluxo')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  currentTab === 'fluxo'
+                    ? 'bg-sky-600 text-white shadow-md shadow-sky-600/25'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Activity className="w-3.5 h-3.5" />
+                <span>Fluxo de Caixa</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('entradas_saidas')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'entradas_saidas'
-                  ? 'bg-sky-600 text-white shadow-md shadow-sky-600/25'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <PieChart className="w-3.5 h-3.5" />
-              <span>Entradas e Saídas</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('entradas_saidas')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  currentTab === 'entradas_saidas'
+                    ? 'bg-sky-600 text-white shadow-md shadow-sky-600/25'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <PieChart className="w-3.5 h-3.5" />
+                <span>Entradas e Saídas</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('centro_custo')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'centro_custo'
-                  ? 'bg-purple-600 text-white shadow-md shadow-purple-600/25'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Target className="w-3.5 h-3.5" />
-              <span>Centro de Custo</span>
-            </button>
-          </div>
+              <button
+                onClick={() => setActiveTab('centro_custo')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  currentTab === 'centro_custo'
+                    ? 'bg-purple-600 text-white shadow-md shadow-purple-600/25'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Target className="w-3.5 h-3.5" />
+                <span>Centro de Custo</span>
+              </button>
+            </div>
+          )}
 
           <button
             onClick={handlePrint}

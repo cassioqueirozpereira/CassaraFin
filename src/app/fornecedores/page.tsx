@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { Supplier } from '@/types';
 import { formatCpfOrCnpj, formatPhone } from '@/utils/formatters';
 import { NewSupplierModal } from '@/components/fornecedores/NewSupplierModal';
@@ -9,11 +11,16 @@ import { SupplierDetailModal } from '@/components/fornecedores/SupplierDetailMod
 import { Users, Plus, Search, Building2, User, Eye, Phone, Mail } from 'lucide-react';
 
 export default function FornecedoresPage() {
+  const { role } = useAuth();
   const { suppliers, searchSuppliers } = useFinancial();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const displayedSuppliers = searchSuppliers(searchQuery);
 

@@ -12,11 +12,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [role, setRoleState] = useState<UserRole>('gestor');
+  const [role, setRoleState] = useState<UserRole>('master');
 
   useEffect(() => {
     const savedRole = localStorage.getItem('cassarafin_user_role') as UserRole;
-    if (savedRole && ['gestor', 'admin', 'operador'].includes(savedRole)) {
+    if (savedRole && ['master', 'plus', 'comum'].includes(savedRole)) {
       setRoleState(savedRole);
     }
   }, []);
@@ -27,9 +27,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const roleLabelMap: Record<UserRole, string> = {
-    gestor: 'Gestor Financeiro',
-    admin: 'Administrador',
-    operador: 'Operador / Membro',
+    master: 'Usuário Master (Acesso Total)',
+    plus: 'Usuário Plus (Restrito)',
+    comum: 'Usuário Comum (Somente Fluxo de Caixa)',
   };
 
   return (

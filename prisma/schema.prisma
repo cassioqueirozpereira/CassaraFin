@@ -1,0 +1,159 @@
+// Prisma schema for CassaraFin PostgreSQL / Supabase Database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MASTER
+  PLUS
+  COMUM
+}
+
+enum PersonType {
+  PF
+  PJ
+}
+
+enum CategoryType {
+  ENTRADA
+  SAIDA
+}
+
+enum BankAccountType {
+  CORRENTE
+  POUPANCA
+  CAIXA_FISICO
+}
+
+enum Status {
+  PENDENTE
+  PAGO
+  RECEBIDO
+  CANCELADO
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(COMUM)
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+model CostCenter {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  payables    Payable[]
+  receivables Receivable[]
+
+  @@map("cost_centers")
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  name        String
+  type        CategoryType
+  description String?
+  isActive    Boolean      @default(true)
+
+  payables    Payable[]
+  receivables Receivable[]
+
+  @@map("categories")
+}
+
+model Supplier {
+  id         String     @id @default(cuid())
+  name       String
+  personType PersonType
+  cpf        String?
+  cnpj       String?
+  phone      String
+  email      String?
+  createdAt  DateTime   @default(now())
+
+  payables    Payable[]
+  receivables Receivable[]
+
+  @@map("suppliers")
+}
+
+model BankAccount {
+  id             String          @id @default(cuid())
+  name           String
+  bankName       String
+  agency         String
+  accountNumber  String
+  accountType    BankAccountType
+  initialBalance Float           @default(0)
+  color          String?         @default("#0284c7")
+  createdAt      DateTime        @default(now())
+
+  payables    Payable[]
+  receivables Receivable[]
+
+  @@map("bank_accounts")
+}
+
+model Payable {
+  id              String       @id @default(cuid())
+  categoryId      String
+  category        Category     @relation(fields: [categoryId], references: [id])
+  costCenterId    String?
+  costCenter      CostCenter?  @relation(fields: [costCenterId], references: [id])
+  supplierId      String
+  supplier        Supplier     @relation(fields: [supplierId], references: [id])
+  bankAccountId   String?
+  bankAccount     BankAccount? @relation(fields: [bankAccountId], references: [id])
+  
+  value           Float
+  invoiceValue    Float
+  paidValue       Float?
+  observation     String
+  invoiceNumber   String
+  dueDate         String
+  paymentDate     String?
+  installmentInfo Json?
+  status          Status       @default(PENDENTE)
+  createdAt       DateTime     @default(now())
+
+  @@map("payables")
+}
+
+model Receivable {
+  id              String       @id @default(cuid())
+  categoryId      String
+  category        Category     @relation(fields: [categoryId], references: [id])
+  costCenterId    String?
+  costCenter      CostCenter?  @relation(fields: [costCenterId], references: [id])
+  supplierId      String?
+  supplier        Supplier?    @relation(fields: [supplierId], references: [id])
+  bankAccountId   String?
+  bankAccount     BankAccount? @relation(fields: [bankAccountId], references: [id])
+  
+  value           Float
+  receivedValue   Float?
+  observation     String?
+  dueDate         String?
+  receivedDate    String?
+  installmentInfo Json?
+  status          Status       @default(PENDENTE)
+  createdAt       DateTime     @default(now())
+
+  @@map("receivables")
+}

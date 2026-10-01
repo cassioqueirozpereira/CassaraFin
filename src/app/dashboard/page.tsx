@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import {
   ArrowUpCircle,
@@ -19,10 +21,16 @@ import { NewPayableModal } from '@/components/contas-pagar/NewPayableModal';
 import { NewReceivableModal } from '@/components/contas-receber/NewReceivableModal';
 
 export default function DashboardPage() {
+  const { role } = useAuth();
   const { payables, receivables, suppliers, categories } = useFinancial();
 
   const [isNewPayableOpen, setIsNewPayableOpen] = useState(false);
   const [isNewReceivableOpen, setIsNewReceivableOpen] = useState(false);
+
+  // Usuário Comum só tem acesso à visualização do relatório do fluxo de caixa
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const totalEntradas = receivables.reduce((sum, item) => sum + item.value, 0);
   const totalSaidas = payables.reduce((sum, item) => sum + (item.paidValue || item.value), 0);

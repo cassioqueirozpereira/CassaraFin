@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { parseOFX } from '@/utils/ofxParser';
 import { OFXTransaction } from '@/types';
 import { formatCurrency, formatDate } from '@/utils/formatters';
@@ -19,7 +21,15 @@ import {
 } from 'lucide-react';
 
 export default function ConciliacaoBancariaPage() {
+  const { role } = useAuth();
   const { payables, receivables, bankAccounts, baixaPayable, baixaReceivable } = useFinancial();
+
+  const isMaster = role === 'master';
+
+  // Usuário Comum não tem acesso à conciliação bancária
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const [selectedBankId, setSelectedBankId] = useState(bankAccounts[0]?.id || '');
   const [ofxTransactions, setOfxTransactions] = useState<OFXTransaction[]>([]);

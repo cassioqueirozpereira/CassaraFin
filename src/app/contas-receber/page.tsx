@@ -1,19 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { PeriodSelector } from '@/components/common/PeriodSelector';
 import { ReceivablesTable } from '@/components/contas-receber/Table';
 import { NewReceivableModal } from '@/components/contas-receber/NewReceivableModal';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { getStartOfMonthString, getEndOfMonthString } from '@/utils/formatters';
 import { Plus, ArrowUpCircle } from 'lucide-react';
 
 export default function ContasReceberPage() {
+  const { role } = useAuth();
   const { filterReceivablesByPeriod } = useFinancial();
 
   const [startDate, setStartDate] = useState(getStartOfMonthString());
   const [endDate, setEndDate] = useState(getEndOfMonthString());
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const filteredReceivables = filterReceivablesByPeriod(startDate, endDate);
 

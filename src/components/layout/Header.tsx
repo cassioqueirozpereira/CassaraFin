@@ -22,10 +22,10 @@ export function Header() {
         </div>
         <div>
           <h1 className="text-base lg:text-lg font-bold tracking-tight text-slate-100">
-            Gestão Financeira Igreja
+            Gestão Financeira TFJ
           </h1>
           <p className="text-xs text-slate-400 font-normal">
-            CassaraFin &bull; Módulo Administrativo & Financeiro
+            CassaraFin &bull; Módulo Financeiro
           </p>
         </div>
       </div>

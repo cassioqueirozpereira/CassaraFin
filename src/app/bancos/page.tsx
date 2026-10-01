@@ -1,14 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { BankAccountType } from '@/types';
 import { formatCurrency } from '@/utils/formatters';
 import { Modal } from '@/components/common/Modal';
 import { Building2, Plus, Trash2, CheckCircle2, AlertCircle, Wallet } from 'lucide-react';
 
 export default function BancosPage() {
+  const { role } = useAuth();
   const { bankAccounts, addBankAccount, deleteBankAccount } = useFinancial();
+
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [name, setName] = useState('');

@@ -22,7 +22,8 @@ import {
 export function Sidebar() {
   const pathname = usePathname();
   const { role } = useAuth();
-  const isGestor = role === 'gestor';
+  const isMaster = role === 'master';
+  const isComum = role === 'comum';
 
   // State for collapsible "Cadastro" dropdown
   const [isCadastroOpen, setIsCadastroOpen] = useState(
@@ -46,160 +47,177 @@ export function Sidebar() {
           </p>
 
           <nav className="space-y-1">
-            {/* Visão Geral / Dashboard */}
-            <Link
-              href="/dashboard"
-              className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                pathname === '/dashboard' || pathname === '/'
-                  ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <LayoutDashboard className="w-4 h-4" />
-                <span>Visão Geral</span>
-              </div>
-            </Link>
-
-            {/* 1. Contas a Pagar */}
-            <Link
-              href="/contas-pagar"
-              className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                pathname === '/contas-pagar'
-                  ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <ArrowDownCircle className="w-4 h-4 text-rose-400" />
-                <span>Contas a Pagar</span>
-              </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded border bg-rose-500/10 text-rose-400 border-rose-500/20">
-                Saídas
-              </span>
-            </Link>
-
-            {/* 2. Contas a Receber */}
-            <Link
-              href="/contas-receber"
-              className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                pathname === '/contas-receber'
-                  ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <ArrowUpCircle className="w-4 h-4 text-emerald-400" />
-                <span>Contas a Receber</span>
-              </div>
-              <span className="text-[10px] px-1.5 py-0.5 rounded border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                Entradas
-              </span>
-            </Link>
-
-            {/* 3. Conciliação */}
-            <Link
-              href="/conciliacao"
-              className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                pathname === '/conciliacao'
-                  ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <FileCode className="w-4 h-4 text-sky-400" />
-                <span>Conciliação</span>
-              </div>
-            </Link>
-
-            {/* 4. Cadastro (Dropdown Collapsible) */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsCadastroOpen(!isCadastroOpen)}
-                className={`w-full group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isCadastroActive
-                    ? 'bg-slate-800/90 text-slate-100 font-semibold border border-slate-700'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <FolderPlus className="w-4 h-4 text-indigo-400" />
-                  <span>Cadastro</span>
-                </div>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    isCadastroOpen ? 'transform rotate-180 text-sky-400' : 'text-slate-500'
+            {/* Se for usuário COMUM, libera apenas os Relatórios (Fluxo de Caixa) */}
+            {!isComum && (
+              <>
+                {/* Visão Geral / Dashboard */}
+                <Link
+                  href="/dashboard"
+                  className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    pathname === '/dashboard' || pathname === '/'
+                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                   }`}
-                />
-              </button>
+                >
+                  <div className="flex items-center gap-3">
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Visão Geral</span>
+                  </div>
+                </Link>
 
-              {/* Collapsible Submenu */}
-              {isCadastroOpen && (
-                <div className="ml-4 pl-3 border-l border-slate-800 mt-1 space-y-1 animate-in fade-in duration-150">
-                  {/* Plano de Contas */}
-                  <Link
-                    href="/plano-contas"
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                      pathname === '/plano-contas'
-                        ? 'bg-sky-600/15 text-sky-400 font-bold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                {/* 1. Contas a Pagar */}
+                <Link
+                  href="/contas-pagar"
+                  className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    pathname === '/contas-pagar'
+                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <ArrowDownCircle className="w-4 h-4 text-rose-400" />
+                    <span>Contas a Pagar</span>
+                  </div>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded border bg-rose-500/10 text-rose-400 border-rose-500/20">
+                    Saídas
+                  </span>
+                </Link>
+
+                {/* 2. Contas a Receber */}
+                <Link
+                  href="/contas-receber"
+                  className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    pathname === '/contas-receber'
+                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <ArrowUpCircle className="w-4 h-4 text-emerald-400" />
+                    <span>Contas a Receber</span>
+                  </div>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                    Entradas
+                  </span>
+                </Link>
+
+                {/* 3. Conciliação */}
+                <Link
+                  href="/conciliacao"
+                  className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    pathname === '/conciliacao'
+                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <FileCode className="w-4 h-4 text-sky-400" />
+                    <span>Conciliação</span>
+                  </div>
+                  {!isMaster && (
+                    <span className="flex items-center gap-0.5 text-[9px] px-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      Leitura
+                    </span>
+                  )}
+                </Link>
+
+                {/* 4. Cadastro (Dropdown Collapsible) */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCadastroOpen(!isCadastroOpen)}
+                    className={`w-full group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      isCadastroActive
+                        ? 'bg-slate-800/90 text-slate-100 font-semibold border border-slate-700'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <FolderTree className="w-3.5 h-3.5" />
-                      <span>Plano de Contas</span>
+                    <div className="flex items-center gap-3">
+                      <FolderPlus className="w-4 h-4 text-indigo-400" />
+                      <span>Cadastro</span>
                     </div>
-                    {!isGestor && (
-                      <span className="flex items-center gap-0.5 text-[9px] px-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        <Lock className="w-2 h-2" />
-                      </span>
-                    )}
-                  </Link>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isCadastroOpen ? 'transform rotate-180 text-sky-400' : 'text-slate-500'
+                      }`}
+                    />
+                  </button>
 
-                  {/* Centro de Custo */}
-                  <Link
-                    href="/centro-custo"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                      pathname === '/centro-custo'
-                        ? 'bg-sky-600/15 text-sky-400 font-bold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    }`}
-                  >
-                    <Target className="w-3.5 h-3.5 text-purple-400" />
-                    <span>Centro de Custo</span>
-                  </Link>
+                  {/* Collapsible Submenu */}
+                  {isCadastroOpen && (
+                    <div className="ml-4 pl-3 border-l border-slate-800 mt-1 space-y-1 animate-in fade-in duration-150">
+                      {/* Plano de Contas (Restrito a Master) */}
+                      <Link
+                        href="/plano-contas"
+                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          pathname === '/plano-contas'
+                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <FolderTree className="w-3.5 h-3.5" />
+                          <span>Plano de Contas</span>
+                        </div>
+                        {!isMaster && (
+                          <span className="flex items-center gap-0.5 text-[9px] px-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            <Lock className="w-2.5 h-2.5" />
+                          </span>
+                        )}
+                      </Link>
 
-                  {/* Fornecedores */}
-                  <Link
-                    href="/fornecedores"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                      pathname === '/fornecedores'
-                        ? 'bg-sky-600/15 text-sky-400 font-bold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    }`}
-                  >
-                    <Users className="w-3.5 h-3.5" />
-                    <span>Fornecedores</span>
-                  </Link>
+                      {/* Centro de Custo (Restrito a Master) */}
+                      <Link
+                        href="/centro-custo"
+                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          pathname === '/centro-custo'
+                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Target className="w-3.5 h-3.5 text-purple-400" />
+                          <span>Centro de Custo</span>
+                        </div>
+                        {!isMaster && (
+                          <span className="flex items-center gap-0.5 text-[9px] px-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            <Lock className="w-2.5 h-2.5" />
+                          </span>
+                        )}
+                      </Link>
 
-                  {/* Bancos */}
-                  <Link
-                    href="/bancos"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                      pathname === '/bancos'
-                        ? 'bg-sky-600/15 text-sky-400 font-bold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                    }`}
-                  >
-                    <Building2 className="w-3.5 h-3.5" />
-                    <span>Bancos</span>
-                  </Link>
+                      {/* Fornecedores */}
+                      <Link
+                        href="/fornecedores"
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          pathname === '/fornecedores'
+                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                        }`}
+                      >
+                        <Users className="w-3.5 h-3.5" />
+                        <span>Fornecedores</span>
+                      </Link>
+
+                      {/* Bancos */}
+                      <Link
+                        href="/bancos"
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          pathname === '/bancos'
+                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                        }`}
+                      >
+                        <Building2 className="w-3.5 h-3.5" />
+                        <span>Bancos</span>
+                      </Link>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
 
-            {/* 5. Relatórios */}
+            {/* Relatórios (Visível para todos) */}
             <Link
               href="/relatorios"
               className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -212,6 +230,11 @@ export function Sidebar() {
                 <BarChart3 className="w-4 h-4 text-emerald-400" />
                 <span>Relatórios</span>
               </div>
+              {isComum && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded border bg-sky-500/10 text-sky-400 border-sky-500/20">
+                  Fluxo de Caixa
+                </span>
+              )}
             </Link>
           </nav>
         </div>
@@ -220,11 +243,11 @@ export function Sidebar() {
       <div className="p-4 border-t border-slate-800/80 bg-slate-950/40 m-3 rounded-xl">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-sky-400 font-bold text-xs">
-            IG
+            TFC
           </div>
           <div className="overflow-hidden">
-            <p className="text-xs font-semibold text-slate-200 truncate">Igreja Evangélica</p>
-            <p className="text-[10px] text-slate-400 truncate">Tesouraria Geral</p>
+            <p className="text-xs font-semibold text-slate-200 truncate">Torre Forte Church</p>
+            <p className="text-[10px] text-slate-400 truncate">Tesouraria</p>
           </div>
         </div>
       </div>

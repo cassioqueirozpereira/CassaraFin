@@ -1,17 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { Modal } from '@/components/common/Modal';
 import { CostCenter } from '@/types';
 import { Target, Plus, Search, Pencil, Trash2, CheckCircle2, AlertCircle, Building2, Layers, HeartHandshake, Baby, Users } from 'lucide-react';
 
 export default function CentroCustoPage() {
+  const { role } = useAuth();
   const { costCenters, addCostCenter, updateCostCenter, deleteCostCenter, payables, receivables } = useFinancial();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCc, setEditingCc] = useState<CostCenter | null>(null);
+
+  // Restrito exclusivamente ao Usuário Master
+  if (role !== 'master') {
+    return <AccessDenied />;
+  }
 
   // Form states
   const [code, setCode] = useState('');

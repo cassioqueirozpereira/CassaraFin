@@ -12,8 +12,8 @@ export default function PlanoContasPage() {
   const { categories } = useFinancial();
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
 
-  // Enforce explicit requirement 3: Gestor Financeiro has access, Admin and others do NOT.
-  if (role !== 'gestor') {
+  // Restrito exclusivamente ao Usuário Master
+  if (role !== 'master') {
     return <AccessDenied />;
   }
 

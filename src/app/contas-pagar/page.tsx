@@ -1,19 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { PeriodSelector } from '@/components/common/PeriodSelector';
 import { PayablesTable } from '@/components/contas-pagar/Table';
 import { NewPayableModal } from '@/components/contas-pagar/NewPayableModal';
 import { useFinancial } from '@/context/FinancialContext';
+import { AccessDenied } from '@/components/common/AccessDenied';
 import { getStartOfMonthString, getEndOfMonthString } from '@/utils/formatters';
 import { Plus, ArrowDownCircle } from 'lucide-react';
 
 export default function ContasPagarPage() {
+  const { role } = useAuth();
   const { filterPayablesByPeriod } = useFinancial();
 
   const [startDate, setStartDate] = useState(getStartOfMonthString());
   const [endDate, setEndDate] = useState(getEndOfMonthString());
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+
+  if (role === 'comum') {
+    return <AccessDenied />;
+  }
 
   const filteredPayables = filterPayablesByPeriod(startDate, endDate);
 
