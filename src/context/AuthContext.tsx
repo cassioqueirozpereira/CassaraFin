@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserRole, User } from '@/types';
 import { useRouter, usePathname } from 'next/navigation';
+import { redirectToGoogleOAuth } from '@/lib/supabase';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -20,6 +21,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const PUBLIC_ROUTES = ['/', '/login', '/termos', '/privacidade'];
 
+function parseHashParams(hash: string): Record<string, string> {
+  if (!hash || !hash.startsWith('#')) return {};
+  const params: Record<string, string> = {};
+  const hashWithoutSymbol = hash.substring(1);
+  const pairs = hashWithoutSymbol.split('&');
+  for (const pair of pairs) {
+    const [key, value] = pair.split('=');
+    if (key && value) {
+      params[key] = decodeURIComponent(value);
+    }
+  }
+  return params;
+}
+
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -31,6 +62,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
+        // 1. Processar retorno de autenticação via Supabase OAuth (#access_token=...)
+        const hashParams = parseHashParams(window.location.hash);
+        if (hashParams.access_token) {
+          const payload = parseJwt(hashParams.access_token);
+          if (payload && payload.email) {
+            const userEmail = payload.email.toLowerCase().trim();
+            const userName =
+              payload.user_metadata?.full_name ||
+              payload.user_metadata?.name ||
+              userEmail.split('@')[0];
+
+            const googleUser: User = {
+              id: payload.sub || 'google-' + Date.now(),
+              name: userName,
+              email: userEmail,
+              role: 'comum',
+            };
+
+            setCurrentUser(googleUser);
+            setRoleState('comum');
+            localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
+            localStorage.setItem('cassarafin_user_role', 'comum');
+
+            // Limpar o hash da URL para manter limpo
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            router.push('/relatorios');
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // 2. Processar retorno de sessão via query string (fallback)
         const urlParams = new URLSearchParams(window.location.search);
         const googleSession = urlParams.get('google_session');
 
@@ -42,7 +106,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             localStorage.setItem('cassarafin_current_user', JSON.stringify(parsedUser));
             localStorage.setItem('cassarafin_user_role', parsedUser.role);
 
-            // Clean query param from URL
             window.history.replaceState({}, document.title, window.location.pathname);
 
             if (parsedUser.role === 'comum') {
@@ -157,7 +220,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('cassarafin_current_user', JSON.stringify(loggedUser));
       localStorage.setItem('cassarafin_user_role', loggedUser.role);
 
-      // Default role COMUM goes to /relatorios
       router.push('/relatorios');
 
       return { success: true };
@@ -169,40 +231,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
-      // Tenta obter a URL de autorização oficial do Google OAuth (com prompt=select_account)
-      const res = await fetch('/api/auth/google/url');
-      const data = await res.json();
-
-      if (res.ok && data.url) {
-        // Redireciona para a página oficial do Google onde o usuário escolhe/digita seu e-mail
-        window.location.href = data.url;
-        return { success: true };
-      }
-
-      // Se ainda não houver GOOGLE_CLIENT_ID no .env.local:
-      // Oferece um prompt interativo para o usuário digitar seu e-mail do Google para demonstração imediata
-      const userEmail = window.prompt(
-        'Integração oficial do Google OAuth pronta!\n\nPara abrir a tela oficial do Google (accounts.google.com), insira o GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env.local.\n\nEnquanto isso, informe o e-mail Google que deseja usar para testar:'
-      );
-
-      if (!userEmail || !userEmail.trim()) {
-        return { success: false, error: 'Login via Google cancelado.' };
-      }
-
-      const cleanEmail = userEmail.trim().toLowerCase();
-      const googleUser: User = {
-        id: 'google-user-' + Date.now(),
-        name: cleanEmail.split('@')[0],
-        email: cleanEmail,
-        role: 'comum',
-      };
-
-      setCurrentUser(googleUser);
-      setRoleState('comum');
-      localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
-      localStorage.setItem('cassarafin_user_role', 'comum');
-
-      router.push('/relatorios');
+      // Redireciona diretamente para a autenticação oficial via Supabase Google OAuth
+      redirectToGoogleOAuth();
       return { success: true };
     } catch (err) {
       console.error('Erro no login Google:', err);
@@ -240,7 +270,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </AuthContext.Provider>
-
   );
 }
 
