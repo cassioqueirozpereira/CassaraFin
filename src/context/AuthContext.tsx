@@ -30,6 +30,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const googleSession = urlParams.get('google_session');
+
+        if (googleSession) {
+          try {
+            const parsedUser = JSON.parse(decodeURIComponent(googleSession)) as User;
+            setCurrentUser(parsedUser);
+            setRoleState(parsedUser.role);
+            localStorage.setItem('cassarafin_current_user', JSON.stringify(parsedUser));
+            localStorage.setItem('cassarafin_user_role', parsedUser.role);
+
+            // Clean query param from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            if (parsedUser.role === 'comum') {
+              router.push('/relatorios');
+            } else {
+              router.push('/dashboard');
+            }
+            setIsLoading(false);
+            return;
+          } catch (e) {
+            console.error('Erro ao processar sessão Google:', e);
+          }
+        }
+      }
+
       const savedUser = localStorage.getItem('cassarafin_current_user');
       const savedRole = localStorage.getItem('cassarafin_user_role') as UserRole;
 
@@ -45,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [router]);
 
   // Route Guard: Allow public routes without redirecting to /login
   useEffect(() => {
@@ -141,15 +169,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
-      // Simulação / Redirecionamento Google OAuth (Integrável via Supabase Client)
-      // Se houver NEXT_PUBLIC_SUPABASE_URL configurado no futuro:
-      // await supabase.auth.signInWithOAuth({ provider: 'google' });
-      
-      // Para demonstração imediata funcional:
+      // Tenta obter a URL de autorização oficial do Google OAuth (com prompt=select_account)
+      const res = await fetch('/api/auth/google/url');
+      const data = await res.json();
+
+      if (res.ok && data.url) {
+        // Redireciona para a página oficial do Google onde o usuário escolhe/digita seu e-mail
+        window.location.href = data.url;
+        return { success: true };
+      }
+
+      // Se ainda não houver GOOGLE_CLIENT_ID no .env.local:
+      // Oferece um prompt interativo para o usuário digitar seu e-mail do Google para demonstração imediata
+      const userEmail = window.prompt(
+        'Integração oficial do Google OAuth pronta!\n\nPara abrir a tela oficial do Google (accounts.google.com), insira o GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env.local.\n\nEnquanto isso, informe o e-mail Google que deseja usar para testar:'
+      );
+
+      if (!userEmail || !userEmail.trim()) {
+        return { success: false, error: 'Login via Google cancelado.' };
+      }
+
+      const cleanEmail = userEmail.trim().toLowerCase();
       const googleUser: User = {
         id: 'google-user-' + Date.now(),
-        name: 'Membro Conectado (Google)',
-        email: 'membro.google@torreforte.org',
+        name: cleanEmail.split('@')[0],
+        email: cleanEmail,
         role: 'comum',
       };
 
@@ -162,7 +206,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { success: true };
     } catch (err) {
       console.error('Erro no login Google:', err);
-      return { success: false, error: 'Falha ao autenticar com Google.' };
+      return { success: false, error: 'Falha ao conectar com o serviço do Google.' };
     }
   };
 
