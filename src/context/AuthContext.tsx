@@ -10,11 +10,15 @@ interface AuthContextType {
   roleLabel: string;
   setRole: (role: UserRole) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const PUBLIC_ROUTES = ['/', '/login', '/termos', '/privacidade'];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -43,10 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Route Guard: Redirect to /login if not logged in (except if already on /login)
+  // Route Guard: Allow public routes without redirecting to /login
   useEffect(() => {
     if (!isLoading) {
-      if (!currentUser && pathname !== '/login') {
+      const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
+      if (!currentUser && !isPublicRoute) {
         router.push('/login');
       } else if (currentUser && pathname === '/login') {
         if (currentUser.role === 'comum') {
@@ -102,6 +108,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Erro ao realizar cadastro.' };
+      }
+
+      const loggedUser: User = data.user;
+      setCurrentUser(loggedUser);
+      setRoleState(loggedUser.role);
+
+      localStorage.setItem('cassarafin_current_user', JSON.stringify(loggedUser));
+      localStorage.setItem('cassarafin_user_role', loggedUser.role);
+
+      // Default role COMUM goes to /relatorios
+      router.push('/relatorios');
+
+      return { success: true };
+    } catch (err) {
+      console.error('Erro na chamada de cadastro:', err);
+      return { success: false, error: 'Falha na conexão ao criar conta.' };
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      // Simulação / Redirecionamento Google OAuth (Integrável via Supabase Client)
+      // Se houver NEXT_PUBLIC_SUPABASE_URL configurado no futuro:
+      // await supabase.auth.signInWithOAuth({ provider: 'google' });
+      
+      // Para demonstração imediata funcional:
+      const googleUser: User = {
+        id: 'google-user-' + Date.now(),
+        name: 'Membro Conectado (Google)',
+        email: 'membro.google@torreforte.org',
+        role: 'comum',
+      };
+
+      setCurrentUser(googleUser);
+      setRoleState('comum');
+      localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
+      localStorage.setItem('cassarafin_user_role', 'comum');
+
+      router.push('/relatorios');
+      return { success: true };
+    } catch (err) {
+      console.error('Erro no login Google:', err);
+      return { success: false, error: 'Falha ao autenticar com Google.' };
+    }
+  };
+
   const logout = () => {
     setCurrentUser(null);
     setRoleState('master');
@@ -124,12 +188,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         roleLabel: roleLabelMap[role],
         setRole,
         login,
+        register,
+        loginWithGoogle,
         logout,
         isLoading,
       }}
     >
       {children}
     </AuthContext.Provider>
+
   );
 }
 

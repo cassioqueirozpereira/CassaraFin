@@ -8,8 +8,9 @@ import { Sidebar } from '@/components/layout/Sidebar';
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Rotas que não devem exibir Header e Sidebar (ex: Landing Page e Login)
-  const isPublicRoute = pathname === '/' || pathname === '/login';
+  // Rotas que não devem exibir Header e Sidebar (ex: Landing Page, Login, Termos e Privacidade)
+  const publicRoutes = ['/', '/login', '/termos', '/privacidade'];
+  const isPublicRoute = publicRoutes.includes(pathname);
 
   if (isPublicRoute) {
     return <main className="flex-1 w-full h-full min-h-screen bg-[#000000] overflow-y-auto">{children}</main>;
