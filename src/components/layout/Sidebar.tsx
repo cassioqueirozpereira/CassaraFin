@@ -236,6 +236,26 @@ export function Sidebar() {
                 </span>
               )}
             </Link>
+
+            {/* Usuários e Níveis de Acesso (Restrito a Master) */}
+            {isMaster && (
+              <Link
+                href="/usuarios"
+                className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  pathname === '/usuarios'
+                    ? 'bg-purple-600/15 text-purple-400 border border-purple-500/30 font-semibold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Users className="w-4 h-4 text-purple-400" />
+                  <span>Usuários</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded border bg-purple-500/10 text-purple-400 border-purple-500/20 font-semibold">
+                  RBAC
+                </span>
+              </Link>
+            )}
           </nav>
         </div>
       </div>
