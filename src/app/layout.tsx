@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { FinancialProvider } from '@/context/FinancialContext';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { AppShell } from '@/components/layout/AppShell';
 
 export const metadata: Metadata = {
   title: 'Sistema de Gestão Financeira da Igreja | CassaraFin',
@@ -20,15 +19,9 @@ export default function RootLayout({
       <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
         <AuthProvider>
           <FinancialProvider>
-            <Header />
-            <div className="flex flex-1 overflow-hidden">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-slate-950">
-                <div className="w-full max-w-[1800px] mx-auto space-y-6">
-                  {children}
-                </div>
-              </main>
-            </div>
+            <AppShell>
+              {children}
+            </AppShell>
           </FinancialProvider>
         </AuthProvider>
       </body>
