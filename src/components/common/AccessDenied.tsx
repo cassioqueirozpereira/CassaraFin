@@ -4,7 +4,12 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ShieldAlert, Lock, ArrowRight } from 'lucide-react';
 
-export function AccessDenied() {
+interface AccessDeniedProps {
+  title?: string;
+  description?: string;
+}
+
+export function AccessDenied({ title, description }: AccessDeniedProps = {}) {
   const { role, setRole, roleLabel } = useAuth();
 
   return (
@@ -13,10 +18,16 @@ export function AccessDenied() {
         <Lock className="w-8 h-8" />
       </div>
 
-      <h2 className="text-2xl font-bold text-slate-100 mb-2">Acesso Restrito ao Módulo</h2>
+      <h2 className="text-2xl font-bold text-slate-100 mb-2">
+        {title || 'Acesso Restrito ao Módulo'}
+      </h2>
       
       <p className="text-slate-400 text-sm max-w-md mb-6 leading-relaxed">
-        Seu perfil atual (<span className="text-amber-400 font-medium">{roleLabel}</span>) não possui permissão para acessar este módulo.
+        {description || (
+          <>
+            Seu perfil atual (<span className="text-amber-400 font-medium">{roleLabel}</span>) não possui permissão para acessar este módulo.
+          </>
+        )}
       </p>
 
       <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl max-w-md w-full mb-6 text-left space-y-2 text-xs">
@@ -33,7 +44,7 @@ export function AccessDenied() {
 
       <button
         onClick={() => setRole('master')}
-        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-purple-600/25 transition-all"
+        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-purple-600/25 transition-all cursor-pointer"
       >
         <span>Alternar para Usuário Master</span>
         <ArrowRight className="w-4 h-4" />
