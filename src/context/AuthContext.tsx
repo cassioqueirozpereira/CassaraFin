@@ -60,82 +60,115 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        // 1. Processar retorno de autenticação via Supabase OAuth (#access_token=...)
-        const hashParams = parseHashParams(window.location.hash);
-        if (hashParams.access_token) {
-          const payload = parseJwt(hashParams.access_token);
-          if (payload && payload.email) {
-            const userEmail = payload.email.toLowerCase().trim();
-            const userName =
-              payload.user_metadata?.full_name ||
-              payload.user_metadata?.name ||
-              userEmail.split('@')[0];
+    const initAuthSession = async () => {
+      try {
+        if (typeof window !== 'undefined') {
+          // 1. Processar retorno de autenticação via Supabase OAuth (#access_token=...)
+          const hashParams = parseHashParams(window.location.hash);
+          if (hashParams.access_token) {
+            const payload = parseJwt(hashParams.access_token);
+            if (payload && payload.email) {
+              const userEmail = payload.email.toLowerCase().trim();
+              const userName =
+                payload.user_metadata?.full_name ||
+                payload.user_metadata?.name ||
+                userEmail.split('@')[0];
 
-            const googleUser: User = {
-              id: payload.sub || 'google-' + Date.now(),
-              name: userName,
-              email: userEmail,
-              role: 'comum',
-            };
+              // Sincronizar e criar automaticamente na tabela `users` do banco PostgreSQL/Supabase
+              try {
+                const res = await fetch('/api/auth/sync-user', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ name: userName, email: userEmail }),
+                });
 
-            setCurrentUser(googleUser);
-            setRoleState('comum');
-            localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
-            localStorage.setItem('cassarafin_user_role', 'comum');
+                const data = await res.json();
+                if (data.success && data.user) {
+                  const googleUser: User = data.user;
+                  setCurrentUser(googleUser);
+                  setRoleState(googleUser.role);
+                  localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
+                  localStorage.setItem('cassarafin_user_role', googleUser.role);
 
-            // Limpar o hash da URL para manter limpo
-            window.history.replaceState({}, document.title, window.location.pathname);
+                  window.history.replaceState({}, document.title, window.location.pathname);
 
-            router.push('/relatorios');
-            setIsLoading(false);
-            return;
-          }
-        }
+                  if (googleUser.role === 'comum') {
+                    router.push('/relatorios');
+                  } else {
+                    router.push('/dashboard');
+                  }
+                  setIsLoading(false);
+                  return;
+                }
+              } catch (err) {
+                console.error('Erro ao sincronizar usuário com a tabela users:', err);
+              }
 
-        // 2. Processar retorno de sessão via query string (fallback)
-        const urlParams = new URLSearchParams(window.location.search);
-        const googleSession = urlParams.get('google_session');
+              // Fallback se a sincronização com o banco falhar
+              const googleUser: User = {
+                id: payload.sub || 'google-' + Date.now(),
+                name: userName,
+                email: userEmail,
+                role: 'comum',
+              };
 
-        if (googleSession) {
-          try {
-            const parsedUser = JSON.parse(decodeURIComponent(googleSession)) as User;
-            setCurrentUser(parsedUser);
-            setRoleState(parsedUser.role);
-            localStorage.setItem('cassarafin_current_user', JSON.stringify(parsedUser));
-            localStorage.setItem('cassarafin_user_role', parsedUser.role);
+              setCurrentUser(googleUser);
+              setRoleState('comum');
+              localStorage.setItem('cassarafin_current_user', JSON.stringify(googleUser));
+              localStorage.setItem('cassarafin_user_role', 'comum');
 
-            window.history.replaceState({}, document.title, window.location.pathname);
-
-            if (parsedUser.role === 'comum') {
+              window.history.replaceState({}, document.title, window.location.pathname);
               router.push('/relatorios');
-            } else {
-              router.push('/dashboard');
+              setIsLoading(false);
+              return;
             }
-            setIsLoading(false);
-            return;
-          } catch (e) {
-            console.error('Erro ao processar sessão Google:', e);
+          }
+
+          // 2. Processar retorno de sessão via query string (fallback)
+          const urlParams = new URLSearchParams(window.location.search);
+          const googleSession = urlParams.get('google_session');
+
+          if (googleSession) {
+            try {
+              const parsedUser = JSON.parse(decodeURIComponent(googleSession)) as User;
+              setCurrentUser(parsedUser);
+              setRoleState(parsedUser.role);
+              localStorage.setItem('cassarafin_current_user', JSON.stringify(parsedUser));
+              localStorage.setItem('cassarafin_user_role', parsedUser.role);
+
+              window.history.replaceState({}, document.title, window.location.pathname);
+
+              if (parsedUser.role === 'comum') {
+                router.push('/relatorios');
+              } else {
+                router.push('/dashboard');
+              }
+              setIsLoading(false);
+              return;
+            } catch (e) {
+              console.error('Erro ao processar sessão Google:', e);
+            }
           }
         }
-      }
 
-      const savedUser = localStorage.getItem('cassarafin_current_user');
-      const savedRole = localStorage.getItem('cassarafin_user_role') as UserRole;
+        const savedUser = localStorage.getItem('cassarafin_current_user');
+        const savedRole = localStorage.getItem('cassarafin_user_role') as UserRole;
 
-      if (savedUser) {
-        const parsedUser = JSON.parse(savedUser) as User;
-        setCurrentUser(parsedUser);
-        setRoleState(parsedUser.role);
-      } else if (savedRole && ['master', 'plus', 'comum'].includes(savedRole)) {
-        setRoleState(savedRole);
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser) as User;
+          setCurrentUser(parsedUser);
+          setRoleState(parsedUser.role);
+        } else if (savedRole && ['master', 'plus', 'comum'].includes(savedRole)) {
+          setRoleState(savedRole);
+        }
+      } catch (e) {
+        console.error('Error loading stored auth session:', e);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.error('Error loading stored auth session:', e);
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    initAuthSession();
   }, [router]);
 
   // Route Guard: Allow public routes without redirecting to /login
@@ -231,7 +264,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
-      // Redireciona diretamente para a autenticação oficial via Supabase Google OAuth
       redirectToGoogleOAuth();
       return { success: true };
     } catch (err) {

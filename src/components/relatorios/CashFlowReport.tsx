@@ -135,7 +135,8 @@ export function CashFlowReport({ startDate, endDate, selectedBankId }: CashFlowR
                 <XAxis dataKey="formattedDate" stroke="#94a3b8" fontSize={11} />
                 <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(val) => `R$${val}`} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem', fontSize: '12px' }}
+                  cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }}
+                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem', fontSize: '12px', color: '#f8fafc' }}
                   formatter={(val: number) => formatCurrency(val)}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
