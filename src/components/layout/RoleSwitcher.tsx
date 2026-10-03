@@ -25,7 +25,7 @@ export function RoleSwitcher() {
       case 'plus':
         return 'Usuário Plus';
       case 'comum':
-        return 'Usuário Comum';
+        return 'Usuário';
     }
   };
 

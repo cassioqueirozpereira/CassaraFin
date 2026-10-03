@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Logo } from '@/components/common/Logo';
-import { Eye, EyeOff, ChevronLeft, UserPlus, LogIn } from 'lucide-react';
+import { Eye, EyeOff, ChevronRight, UserPlus, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
   const { login, register, loginWithGoogle } = useAuth();
@@ -64,20 +64,22 @@ export default function LoginPage() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-[#00A3FF]/15 via-[#2563EB]/10 to-[#9333EA]/20 rounded-full blur-[120px] pointer-events-none opacity-60" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#9333EA]/15 via-[#2563EB]/10 to-[#00A3FF]/20 rounded-full blur-[120px] pointer-events-none opacity-40" />
 
-      {/* Top Left Home Link */}
+      {/* Top Left Logo */}
       <div className="absolute top-8 left-8 z-10">
-        <Link href="/" className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors">
-          <ChevronLeft className="w-4 h-4" />
-          <span>Voltar ao início</span>
+        <Link href="/">
+          <Logo variant="full" size="md" showSubtitle />
         </Link>
       </div>
 
-      <div className="w-full max-w-[400px] relative z-10 space-y-6">
-        {/* Header Logo Component */}
-        <div className="flex justify-center pb-2">
-          <Logo variant="full" size="lg" showSubtitle />
-        </div>
+      {/* Top Right Home Link */}
+      <div className="absolute top-8 right-8 z-10">
+        <Link href="/" className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white transition-colors group font-medium">
+          <span>Voltar ao início</span>
+          <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+      </div>
 
+      <div className="w-full max-w-[400px] relative z-10 space-y-6 pt-12 md:pt-0">
         {/* Titles */}
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight text-white">

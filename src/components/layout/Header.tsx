@@ -15,11 +15,11 @@ export function Header() {
         <Logo variant="full" size="md" showSubtitle />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4 md:gap-6">
         <RoleSwitcher />
 
         {currentUser && (
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
+          <div className="flex items-center gap-4 md:gap-6 pl-4 md:pl-6 border-l border-slate-800">
             <div className="hidden sm:flex flex-col text-right">
               <span className="text-xs font-semibold text-slate-200 leading-tight">
                 {currentUser.name}
@@ -32,7 +32,7 @@ export function Header() {
             <button
               onClick={logout}
               title="Encerrar Sessão / Sair"
-              className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-lg border border-rose-500/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3.5 py-1.5 rounded-lg border border-rose-500/20 transition-all cursor-pointer ml-3 md:ml-5 shadow-sm"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Sair</span>

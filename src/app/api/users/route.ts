@@ -59,7 +59,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Map role string to Prisma Role Enum
     const dbRole = role.toUpperCase() as Role;
 
     const newUser = await prisma.user.create({
@@ -84,6 +83,44 @@ export async function POST(request: Request) {
     console.error('Erro ao cadastrar usuário:', error);
     return NextResponse.json(
       { success: false, error: 'Erro ao cadastrar novo usuário.' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/users - Update user role
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, role } = body;
+
+    if (!id || !role) {
+      return NextResponse.json(
+        { success: false, error: 'ID e novo nível de acesso (role) são obrigatórios.' },
+        { status: 400 }
+      );
+    }
+
+    const dbRole = role.toUpperCase() as Role;
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: { role: dbRole },
+    });
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role.toLowerCase(),
+      },
+    });
+  } catch (error: any) {
+    console.error('Erro ao atualizar nível de acesso do usuário:', error);
+    return NextResponse.json(
+      { success: false, error: 'Erro ao atualizar nível de acesso.' },
       { status: 500 }
     );
   }

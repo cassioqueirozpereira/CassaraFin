@@ -99,7 +99,6 @@ export default function Home() {
               </div>
               <h3 className="text-base font-semibold text-white group-hover:text-cyan-300 transition-colors mb-1.5 flex items-center gap-2">
                 Conciliação Bancária
-                <span className="inline-block transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12">💳</span>
               </h3>
               <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed font-light group-hover:text-neutral-300 transition-colors">
                 Importe seus extratos em formato OFX e concilie entradas e saídas automaticamente, economizando horas de trabalho na tesouraria.
@@ -113,7 +112,6 @@ export default function Home() {
               </div>
               <h3 className="text-base font-semibold text-white group-hover:text-blue-300 transition-colors mb-1.5 flex items-center gap-2">
                 Segurança por Níveis
-                <span className="inline-block transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12">🛡️</span>
               </h3>
               <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed font-light group-hover:text-neutral-300 transition-colors">
                 Controle exatamente o que cada membro pode ver. Usuários master gerenciam tudo, enquanto outros níveis visualizam apenas saldos.
@@ -127,7 +125,6 @@ export default function Home() {
               </div>
               <h3 className="text-base font-semibold text-white group-hover:text-purple-300 transition-colors mb-1.5 flex items-center gap-2">
                 Relatórios Precisos
-                <span className="inline-block transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12">📊</span>
               </h3>
               <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed font-light group-hover:text-neutral-300 transition-colors">
                 Gere balancetes e fluxo de caixa detalhados com poucos cliques. Transparência total para a liderança e para os membros da igreja.
