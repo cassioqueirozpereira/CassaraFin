@@ -2,15 +2,10 @@
 
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { UserRole } from '@/types';
 import { ShieldCheck, UserCheck, Eye } from 'lucide-react';
 
 export function RoleSwitcher() {
-  const { role, setRole } = useAuth();
-
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRole(e.target.value as UserRole);
-  };
+  const { role } = useAuth();
 
   const getRoleIcon = () => {
     switch (role) {
@@ -23,26 +18,23 @@ export function RoleSwitcher() {
     }
   };
 
+  const getRoleLabel = () => {
+    switch (role) {
+      case 'master':
+        return 'Usuário Master';
+      case 'plus':
+        return 'Usuário Plus';
+      case 'comum':
+        return 'Usuário Comum';
+    }
+  };
+
   return (
-    <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium shadow-sm">
+    <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium shadow-sm select-none">
       {getRoleIcon()}
       <div className="flex flex-col">
-        <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Perfil de Acesso</span>
-        <select
-          value={role}
-          onChange={handleRoleChange}
-          className="bg-transparent text-slate-100 font-medium focus:outline-none cursor-pointer text-xs pr-1"
-        >
-          <option value="master" className="bg-slate-800 text-white">
-            Usuário Master (Acesso Total)
-          </option>
-          <option value="plus" className="bg-slate-800 text-white">
-            Usuário Plus (Lançamentos e Bancos)
-          </option>
-          <option value="comum" className="bg-slate-800 text-white">
-            Usuário Comum (Somente Fluxo de Caixa)
-          </option>
-        </select>
+        <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Perfil de Acesso</span>
+        <span className="text-slate-100 font-semibold text-xs leading-tight">{getRoleLabel()}</span>
       </div>
     </div>
   );

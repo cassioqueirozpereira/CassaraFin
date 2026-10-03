@@ -78,42 +78,11 @@ export default function LoginPage() {
           <Logo variant="full" size="lg" showSubtitle />
         </div>
 
-        {/* Titles & Mode Toggle */}
-        <div className="text-center space-y-1.5">
+        {/* Titles */}
+        <div className="text-center space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight text-white">
             {mode === 'login' ? 'Acesse sua conta' : 'Criar nova conta'}
           </h1>
-          <p className="text-sm text-neutral-400">
-            {mode === 'login' ? (
-              <>
-                Não tem uma conta?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode('register');
-                    setErrorMsg('');
-                  }}
-                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
-                >
-                  Cadastre-se.
-                </button>
-              </>
-            ) : (
-              <>
-                Já possui uma conta?{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode('login');
-                    setErrorMsg('');
-                  }}
-                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
-                >
-                  Fazer login.
-                </button>
-              </>
-            )}
-          </p>
         </div>
 
         {/* Social Auth (Google Login) */}
@@ -223,6 +192,41 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        {/* Mode Toggle (Posicionado abaixo do botão Acessar Conta) */}
+        <div className="text-center pt-1">
+          <p className="text-sm text-neutral-400">
+            {mode === 'login' ? (
+              <>
+                Não tem uma conta?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('register');
+                    setErrorMsg('');
+                  }}
+                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
+                >
+                  Cadastre-se.
+                </button>
+              </>
+            ) : (
+              <>
+                Já possui uma conta?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('login');
+                    setErrorMsg('');
+                  }}
+                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
+                >
+                  Fazer login.
+                </button>
+              </>
+            )}
+          </p>
+        </div>
 
         <p className="text-xs text-neutral-600 text-center max-w-[320px] mx-auto leading-relaxed pt-2">
           Ao prosseguir, você concorda com nossos{' '}
