@@ -4,14 +4,15 @@ import React from 'react';
 import { RoleSwitcher } from './RoleSwitcher';
 import { useFinancial } from '@/context/FinancialContext';
 import { useAuth } from '@/context/AuthContext';
-import { Church, RotateCcw, LogOut, User as UserIcon } from 'lucide-react';
+import { RotateCcw, LogOut } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
 
 export function Header() {
   const { resetToDefaultData } = useFinancial();
   const { currentUser, logout } = useAuth();
 
   const handleReset = () => {
-    if (confirm('Deseja restaurar os dados de demonstração originais da Igreja?')) {
+    if (confirm('Deseja restaurar os dados de demonstração originais?')) {
       resetToDefaultData();
     }
   };
@@ -19,17 +20,7 @@ export function Header() {
   return (
     <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 px-4 lg:px-8 py-3 flex items-center justify-between text-white print:hidden">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-900/30 text-white font-bold">
-          <Church className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-base lg:text-lg font-bold tracking-tight text-slate-100">
-            Gestão Financeira TFJ
-          </h1>
-          <p className="text-xs text-slate-400 font-normal">
-            CassaraFin &bull; Módulo Financeiro
-          </p>
-        </div>
+        <Logo variant="full" size="md" showSubtitle />
       </div>
 
       <div className="flex items-center gap-3">

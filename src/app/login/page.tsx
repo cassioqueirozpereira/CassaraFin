@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, EyeOff, ChevronLeft, Building2, UserPlus, LogIn } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
+import { Eye, EyeOff, ChevronLeft, UserPlus, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
   const { login, register, loginWithGoogle } = useAuth();
@@ -58,10 +59,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-slate-200 font-sans relative flex flex-col items-center justify-center p-6 selection:bg-white/20 overflow-hidden">
-      {/* Background soft ambient lighting */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-neutral-900/30 rounded-full blur-[100px] pointer-events-none opacity-50" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-neutral-800/20 rounded-full blur-[120px] pointer-events-none opacity-30" />
+    <div className="min-h-screen bg-[#000000] text-slate-200 font-sans relative flex flex-col items-center justify-center p-6 selection:bg-cyan-500/20 overflow-hidden">
+      {/* Background ambient gradient lighting matching Cassara Tech palette */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-[#00A3FF]/15 via-[#2563EB]/10 to-[#9333EA]/20 rounded-full blur-[120px] pointer-events-none opacity-60" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#9333EA]/15 via-[#2563EB]/10 to-[#00A3FF]/20 rounded-full blur-[120px] pointer-events-none opacity-40" />
 
       {/* Top Left Home Link */}
       <div className="absolute top-8 left-8 z-10">
@@ -71,16 +72,14 @@ export default function LoginPage() {
         </Link>
       </div>
 
-      <div className="w-full max-w-[400px] relative z-10 space-y-8">
-        {/* Header Icon */}
-        <div className="flex justify-center">
-          <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-bold shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            <Building2 className="w-5 h-5" />
-          </div>
+      <div className="w-full max-w-[400px] relative z-10 space-y-6">
+        {/* Header Logo Component */}
+        <div className="flex justify-center pb-2">
+          <Logo variant="full" size="lg" showSubtitle />
         </div>
 
         {/* Titles & Mode Toggle */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight text-white">
             {mode === 'login' ? 'Acesse sua conta' : 'Criar nova conta'}
           </h1>
@@ -94,7 +93,7 @@ export default function LoginPage() {
                     setMode('register');
                     setErrorMsg('');
                   }}
-                  className="text-white hover:underline transition-all font-medium"
+                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
                 >
                   Cadastre-se.
                 </button>
@@ -108,7 +107,7 @@ export default function LoginPage() {
                     setMode('login');
                     setErrorMsg('');
                   }}
-                  className="text-white hover:underline transition-all font-medium"
+                  className="text-cyan-400 hover:text-cyan-300 hover:underline transition-all font-medium"
                 >
                   Fazer login.
                 </button>
@@ -123,7 +122,7 @@ export default function LoginPage() {
             type="button"
             onClick={handleGoogleClick}
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-white text-sm font-medium py-3 rounded-xl transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 bg-neutral-900/90 hover:bg-neutral-800 border border-neutral-800 text-white text-sm font-medium py-3 rounded-xl transition-all shadow-sm disabled:opacity-50 cursor-pointer hover:border-cyan-500/30"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -158,7 +157,7 @@ export default function LoginPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ex: João da Silva"
-                className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-neutral-500 transition-colors placeholder-neutral-600"
+                className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition-colors placeholder-neutral-600"
                 required
               />
             </div>
@@ -170,8 +169,8 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="seu.nome@igreja.org"
-              className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-neutral-500 transition-colors placeholder-neutral-600"
+              placeholder="seu.email@exemplo.com"
+              className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition-colors placeholder-neutral-600"
               required
             />
           </div>
@@ -184,7 +183,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg pl-3 pr-10 py-2.5 focus:outline-none focus:border-neutral-500 transition-colors placeholder-neutral-600"
+                className="w-full bg-[#000000] border border-neutral-800 text-white text-sm rounded-lg pl-3 pr-10 py-2.5 focus:outline-none focus:border-cyan-500 transition-colors placeholder-neutral-600"
                 required
               />
               <button
@@ -207,7 +206,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-white hover:bg-neutral-200 text-black font-medium text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-[#00A3FF] via-[#2563EB] to-[#9333EA] hover:opacity-90 text-white font-medium text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-2 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.3)] hover:scale-[1.01]"
           >
             {isSubmitting ? (
               <span>Processando...</span>

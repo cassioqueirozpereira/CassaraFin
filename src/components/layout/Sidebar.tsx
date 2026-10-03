@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { Logo } from '@/components/common/Logo';
 import {
   LayoutDashboard,
   ArrowUpCircle,
@@ -55,12 +56,12 @@ export function Sidebar() {
                   href="/dashboard"
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/dashboard' || pathname === '/'
-                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <LayoutDashboard className="w-4 h-4" />
+                    <LayoutDashboard className="w-4 h-4 text-cyan-400" />
                     <span>Visão Geral</span>
                   </div>
                 </Link>
@@ -70,7 +71,7 @@ export function Sidebar() {
                   href="/contas-pagar"
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/contas-pagar'
-                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                   }`}
                 >
@@ -88,7 +89,7 @@ export function Sidebar() {
                   href="/contas-receber"
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/contas-receber'
-                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                   }`}
                 >
@@ -106,12 +107,12 @@ export function Sidebar() {
                   href="/conciliacao"
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/conciliacao'
-                      ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                      ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <FileCode className="w-4 h-4 text-sky-400" />
+                    <FileCode className="w-4 h-4 text-cyan-400" />
                     <span>Conciliação</span>
                   </div>
                   {!isMaster && (
@@ -138,7 +139,7 @@ export function Sidebar() {
                     </div>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-200 ${
-                        isCadastroOpen ? 'transform rotate-180 text-sky-400' : 'text-slate-500'
+                        isCadastroOpen ? 'transform rotate-180 text-cyan-400' : 'text-slate-500'
                       }`}
                     />
                   </button>
@@ -146,12 +147,12 @@ export function Sidebar() {
                   {/* Collapsible Submenu */}
                   {isCadastroOpen && (
                     <div className="ml-4 pl-3 border-l border-slate-800 mt-1 space-y-1 animate-in fade-in duration-150">
-                      {/* Plano de Contas (Restrito a Master) */}
+                      {/* Plano de Contas */}
                       <Link
                         href="/plano-contas"
                         className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/plano-contas'
-                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
                             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                         }`}
                       >
@@ -166,12 +167,12 @@ export function Sidebar() {
                         )}
                       </Link>
 
-                      {/* Centro de Custo (Restrito a Master) */}
+                      {/* Centro de Custo */}
                       <Link
                         href="/centro-custo"
                         className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/centro-custo'
-                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
                             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                         }`}
                       >
@@ -191,7 +192,7 @@ export function Sidebar() {
                         href="/fornecedores"
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/fornecedores'
-                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
                             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                         }`}
                       >
@@ -204,7 +205,7 @@ export function Sidebar() {
                         href="/bancos"
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/bancos'
-                            ? 'bg-sky-600/15 text-sky-400 font-bold'
+                            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
                             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                         }`}
                       >
@@ -222,7 +223,7 @@ export function Sidebar() {
               href="/relatorios"
               className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 pathname === '/relatorios'
-                  ? 'bg-sky-600/15 text-sky-400 border border-sky-500/30 font-semibold'
+                  ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
               }`}
             >
@@ -231,7 +232,7 @@ export function Sidebar() {
                 <span>Relatórios</span>
               </div>
               {isComum && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded border bg-sky-500/10 text-sky-400 border-sky-500/20">
+                <span className="text-[10px] px-1.5 py-0.5 rounded border bg-cyan-500/10 text-cyan-400 border-cyan-500/20">
                   Fluxo de Caixa
                 </span>
               )}
@@ -243,7 +244,7 @@ export function Sidebar() {
                 href="/usuarios"
                 className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   pathname === '/usuarios'
-                    ? 'bg-purple-600/15 text-purple-400 border border-purple-500/30 font-semibold'
+                    ? 'bg-gradient-to-r from-purple-600/20 to-indigo-600/20 text-purple-400 border border-purple-500/40 font-semibold shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                 }`}
               >
@@ -260,16 +261,9 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="p-4 border-t border-slate-800/80 bg-slate-950/40 m-3 rounded-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-sky-400 font-bold text-xs">
-            TFC
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-xs font-semibold text-slate-200 truncate">Torre Forte Church</p>
-            <p className="text-[10px] text-slate-400 truncate">Tesouraria</p>
-          </div>
-        </div>
+      {/* Footer Branding Badge */}
+      <div className="p-3 border-t border-slate-800/80 bg-slate-950/60 m-3 rounded-xl">
+        <Logo variant="full" size="sm" showSubtitle />
       </div>
     </aside>
   );
