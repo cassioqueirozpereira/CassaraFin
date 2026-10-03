@@ -211,18 +211,18 @@ export default function UsuariosPage() {
   };
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
       {/* Header Page Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#00A3FF] via-[#2563EB] to-[#9333EA] flex items-center justify-center shadow-lg shadow-blue-950/30 border border-cyan-500/20 text-white">
-            <Users className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 backdrop-blur-md">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-[#00A3FF] via-[#2563EB] to-[#9333EA] flex items-center justify-center shadow-lg shadow-blue-950/30 border border-cyan-500/20 text-white shrink-0">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-100 tracking-tight">
-              Gestão de Usuários e Níveis de Acesso
+            <h1 className="text-lg sm:text-xl font-bold text-slate-100 tracking-tight">
+              Gestão de Usuários e Permissões
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5 font-light">
               Administre os usuários cadastrados e altere permissões de acesso em tempo real
             </p>
           </div>
@@ -242,7 +242,7 @@ export default function UsuariosPage() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#00A3FF] via-[#2563EB] to-[#9333EA] hover:opacity-90 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-blue-900/30 transition-all cursor-pointer hover:scale-105"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 bg-gradient-to-r from-[#00A3FF] via-[#2563EB] to-[#9333EA] hover:opacity-90 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-blue-900/30 transition-all cursor-pointer hover:scale-105"
           >
             <UserPlus className="w-4 h-4" />
             <span>Novo Usuário</span>
@@ -251,13 +251,13 @@ export default function UsuariosPage() {
       </div>
 
       {/* Role Descriptions Banner */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
         <div className="bg-slate-900/50 border border-slate-800/80 p-4 rounded-2xl">
           <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs mb-1">
             <ShieldCheck className="w-4 h-4" />
             <span>Perfil Master</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 font-light">
             Acesso total a todos os módulos, cadastros, relatórios e gestão de usuários.
           </p>
         </div>
@@ -267,7 +267,7 @@ export default function UsuariosPage() {
             <UserCheck className="w-4 h-4" />
             <span>Perfil Plus</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 font-light">
             Lança receitas, despesas e consulta relatórios. Bloqueado em Plano de Contas e Centro de Custo.
           </p>
         </div>
@@ -277,20 +277,20 @@ export default function UsuariosPage() {
             <Eye className="w-4 h-4" />
             <span>Perfil Comum</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 font-light">
             Acesso de leitura estritamente limitado ao Relatório de Fluxo de Caixa.
           </p>
         </div>
       </div>
 
-      {/* Users List Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-        <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between">
+      {/* Users List Container */}
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl">
+        <div className="p-4 sm:p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h2 className="text-sm font-bold text-slate-200">
             Usuários Cadastrados ({users.length})
           </h2>
-          <span className="text-[11px] text-slate-400">
-            💡 Como Master, você pode alterar o nível de acesso de qualquer usuário direto na tabela abaixo.
+          <span className="text-[11px] text-slate-400 font-light">
+            💡 Você pode alterar o nível de acesso de qualquer usuário direto nas opções abaixo.
           </span>
         </div>
 
@@ -303,80 +303,141 @@ export default function UsuariosPage() {
             Nenhum usuário cadastrado além do administrador padrão.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/40 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  <th className="px-6 py-4">Usuário</th>
-                  <th className="px-6 py-4">E-mail</th>
-                  <th className="px-6 py-4">Nível de Acesso (Alterar)</th>
-                  <th className="px-6 py-4 text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60 text-xs text-slate-300">
-                {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-100 flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 font-bold">
+          <>
+            {/* Mobile Card View (shown on small screens) */}
+            <div className="block md:hidden divide-y divide-slate-800/80">
+              {users.map((u) => (
+                <div key={u.id} className="p-4 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 font-bold shrink-0">
                         {u.name.charAt(0).toUpperCase()}
                       </div>
-                      <span>{u.name}</span>
-                    </td>
-                    <td className="px-6 py-4 text-slate-400">{u.email}</td>
-
-                    {/* Interactive Role Selector Dropdown for Master User */}
-                    <td className="px-6 py-4">
-                      <div className="relative inline-block">
-                        <select
-                          value={u.role}
-                          disabled={updatingId === u.id}
-                          onChange={(e) =>
-                            handleRoleChange(u.id, e.target.value as UserRole, u.email, u.name)
-                          }
-                          className={`appearance-none text-xs font-semibold px-3 py-1.5 pr-8 rounded-xl border transition-all cursor-pointer focus:outline-none ${
-                            u.role === 'master'
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:border-emerald-500/60'
-                              : u.role === 'plus'
-                              ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:border-amber-500/60'
-                              : 'bg-sky-500/10 text-sky-400 border-sky-500/30 hover:border-sky-500/60'
-                          }`}
-                        >
-                          <option value="master" className="bg-slate-900 text-emerald-400">
-                            🛡️ Master (Acesso Total)
-                          </option>
-                          <option value="plus" className="bg-slate-900 text-amber-400">
-                            👤 Plus (Lançamentos e Bancos)
-                          </option>
-                          <option value="comum" className="bg-slate-900 text-sky-400">
-                            👁️ Comum (Somente Fluxo de Caixa)
-                          </option>
-                        </select>
-                        <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none opacity-70" />
+                      <div className="min-w-0">
+                        <p className="font-semibold text-slate-100 text-sm truncate">{u.name}</p>
+                        <p className="text-xs text-slate-400 truncate">{u.email}</p>
                       </div>
-                    </td>
+                    </div>
 
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleDeleteUser(u.id, u.email)}
-                        disabled={deletingId === u.id}
-                        title="Excluir Usuário"
-                        className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
+                    <button
+                      onClick={() => handleDeleteUser(u.id, u.email)}
+                      disabled={deletingId === u.id}
+                      title="Excluir Usuário"
+                      className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors shrink-0 cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="pt-1">
+                    <label className="text-[10px] text-slate-500 font-semibold uppercase block mb-1">Nível de Acesso</label>
+                    <div className="relative">
+                      <select
+                        value={u.role}
+                        disabled={updatingId === u.id}
+                        onChange={(e) =>
+                          handleRoleChange(u.id, e.target.value as UserRole, u.email, u.name)
+                        }
+                        className={`w-full appearance-none text-xs font-semibold px-3 py-2 pr-8 rounded-xl border transition-all cursor-pointer focus:outline-none ${
+                          u.role === 'master'
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                            : u.role === 'plus'
+                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                            : 'bg-sky-500/10 text-sky-400 border-sky-500/30'
+                        }`}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
+                        <option value="master" className="bg-slate-900 text-emerald-400">
+                          🛡️ Master (Acesso Total)
+                        </option>
+                        <option value="plus" className="bg-slate-900 text-amber-400">
+                          👤 Plus (Lançamentos e Bancos)
+                        </option>
+                        <option value="comum" className="bg-slate-900 text-sky-400">
+                          👁️ Comum (Somente Fluxo de Caixa)
+                        </option>
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-70" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (shown on medium+ screens) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-slate-950/40 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4">Usuário</th>
+                    <th className="px-6 py-4">E-mail</th>
+                    <th className="px-6 py-4">Nível de Acesso (Alterar)</th>
+                    <th className="px-6 py-4 text-right">Ações</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-xs text-slate-300">
+                  {users.map((u) => (
+                    <tr key={u.id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="px-6 py-4 font-semibold text-slate-100 flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 font-bold">
+                          {u.name.charAt(0).toUpperCase()}
+                        </div>
+                        <span>{u.name}</span>
+                      </td>
+                      <td className="px-6 py-4 text-slate-400">{u.email}</td>
+
+                      <td className="px-6 py-4">
+                        <div className="relative inline-block">
+                          <select
+                            value={u.role}
+                            disabled={updatingId === u.id}
+                            onChange={(e) =>
+                              handleRoleChange(u.id, e.target.value as UserRole, u.email, u.name)
+                            }
+                            className={`appearance-none text-xs font-semibold px-3 py-1.5 pr-8 rounded-xl border transition-all cursor-pointer focus:outline-none ${
+                              u.role === 'master'
+                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:border-emerald-500/60'
+                                : u.role === 'plus'
+                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:border-amber-500/60'
+                                : 'bg-sky-500/10 text-sky-400 border-sky-500/30 hover:border-sky-500/60'
+                            }`}
+                          >
+                            <option value="master" className="bg-slate-900 text-emerald-400">
+                              🛡️ Master (Acesso Total)
+                            </option>
+                            <option value="plus" className="bg-slate-900 text-amber-400">
+                              👤 Plus (Lançamentos e Bancos)
+                            </option>
+                            <option value="comum" className="bg-slate-900 text-sky-400">
+                              👁️ Comum (Somente Fluxo de Caixa)
+                            </option>
+                          </select>
+                          <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none opacity-70" />
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => handleDeleteUser(u.id, u.email)}
+                          disabled={deletingId === u.id}
+                          title="Excluir Usuário"
+                          className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
       {/* Modal Novo Usuário */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-md p-6 rounded-3xl shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 w-full max-w-md p-5 sm:p-6 rounded-3xl shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold">
@@ -384,7 +445,7 @@ export default function UsuariosPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-100">Cadastrar Novo Usuário</h3>
-                  <p className="text-xs text-slate-400">Defina o nome, e-mail, senha e perfil</p>
+                  <p className="text-xs text-slate-400 font-light">Defina o nome, e-mail, senha e perfil</p>
                 </div>
               </div>
             </div>

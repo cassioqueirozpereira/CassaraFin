@@ -20,7 +20,11 @@ import {
   Target,
 } from 'lucide-react';
 
-export function Sidebar() {
+interface SidebarProps {
+  onNavigate?: () => void;
+}
+
+export function Sidebar({ onNavigate }: SidebarProps) {
   const pathname = usePathname();
   const { role } = useAuth();
   const isMaster = role === 'master';
@@ -39,8 +43,14 @@ export function Sidebar() {
 
   const isCadastroActive = pathname === '/plano-contas' || pathname === '/centro-custo' || pathname === '/fornecedores' || pathname === '/bancos';
 
+  const handleLinkClick = () => {
+    if (onNavigate) {
+      onNavigate();
+    }
+  };
+
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 min-h-[calc(100vh-65px)] print:hidden select-none">
+    <aside className="w-full lg:w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 h-full min-h-[calc(100vh-60px)] print:hidden select-none overflow-y-auto">
       <div className="p-4 space-y-6">
         <div>
           <p className="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
@@ -54,6 +64,7 @@ export function Sidebar() {
                 {/* Visão Geral / Dashboard */}
                 <Link
                   href="/dashboard"
+                  onClick={handleLinkClick}
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/dashboard' || pathname === '/'
                       ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
@@ -69,6 +80,7 @@ export function Sidebar() {
                 {/* 1. Contas a Pagar */}
                 <Link
                   href="/contas-pagar"
+                  onClick={handleLinkClick}
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/contas-pagar'
                       ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
@@ -87,6 +99,7 @@ export function Sidebar() {
                 {/* 2. Contas a Receber */}
                 <Link
                   href="/contas-receber"
+                  onClick={handleLinkClick}
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/contas-receber'
                       ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
@@ -105,6 +118,7 @@ export function Sidebar() {
                 {/* 3. Conciliação */}
                 <Link
                   href="/conciliacao"
+                  onClick={handleLinkClick}
                   className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     pathname === '/conciliacao'
                       ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
@@ -150,6 +164,7 @@ export function Sidebar() {
                       {/* Plano de Contas */}
                       <Link
                         href="/plano-contas"
+                        onClick={handleLinkClick}
                         className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/plano-contas'
                             ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
@@ -170,6 +185,7 @@ export function Sidebar() {
                       {/* Centro de Custo */}
                       <Link
                         href="/centro-custo"
+                        onClick={handleLinkClick}
                         className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/centro-custo'
                             ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
@@ -190,6 +206,7 @@ export function Sidebar() {
                       {/* Fornecedores */}
                       <Link
                         href="/fornecedores"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/fornecedores'
                             ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
@@ -203,6 +220,7 @@ export function Sidebar() {
                       {/* Bancos */}
                       <Link
                         href="/bancos"
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           pathname === '/bancos'
                             ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-cyan-400 font-bold'
@@ -221,6 +239,7 @@ export function Sidebar() {
             {/* Relatórios (Visível para todos) */}
             <Link
               href="/relatorios"
+              onClick={handleLinkClick}
               className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 pathname === '/relatorios'
                   ? 'bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-cyan-400 border border-cyan-500/40 font-semibold shadow-sm'
@@ -242,6 +261,7 @@ export function Sidebar() {
             {isMaster && (
               <Link
                 href="/usuarios"
+                onClick={handleLinkClick}
                 className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   pathname === '/usuarios'
                     ? 'bg-gradient-to-r from-purple-600/20 to-indigo-600/20 text-purple-400 border border-purple-500/40 font-semibold shadow-sm'
